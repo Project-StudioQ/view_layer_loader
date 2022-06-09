@@ -6,6 +6,7 @@ from .util import *
 
 DATA_BLOCK_TEXT = "/Text/"
 DEFAULT_VIEW_LAYER = "View Layer"
+DEFAULT_VIEW_LAYER_VER3 = "ViewLayer"
 
 # -----------------------------------------------------------------------------
 
@@ -39,7 +40,7 @@ def load_view_layers( json_data ):
             if ns["type"] == "ID_MASK_AND_MULTIPLY":
                 _node_set_mask_and_multiply( ns )
                 
-    # 複数レンダーエンジンの設定
+    # 複数レンダーエンジンの設定(Q独自)
     render_engines = json_data["render_engines"]
     for key in render_engines.keys():
         vl_name = _calc_view_layer_name( key )
@@ -215,7 +216,20 @@ def _calc_view_layer_name( view_layer_name ):
         string: ViewLayer名
     """
     props = bpy.context.scene.temp_view_layer_saveload
-    if view_layer_name == DEFAULT_VIEW_LAYER or props.add_view_layer_name == "":
+    if view_layer_name == _get_default_view_layer_name() or props.add_view_layer_name == "":
         return view_layer_name
     else:
         return props.add_view_layer_name + "_" + view_layer_name
+    
+def _get_default_view_layer_name( ):
+    """ Verに応じてデフォルトのViewLayerの名前を取得
+
+    Returns:
+        str: デフォルトのViewLayerの名前
+    """
+    # 3.0以下は「View Layer」
+    if bpy.app.version < ( 3, 0, 0 ):
+        return DEFAULT_VIEW_LAYER
+    # 3.0で「ViewLayer」に
+    else:
+        return DEFAULT_VIEW_LAYER_VER3

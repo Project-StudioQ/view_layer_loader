@@ -17,7 +17,7 @@ def search_view_layers( ):
                 if result:
                     node_settings.append( result )
 
-    # 複数レンダーエンジンの対応用
+    # 複数レンダーエンジンの対応用(Q独自)
     render_engines = {}
     for vl in bpy.context.scene.view_layers:
         if not hasattr(vl, "render_manager_item"):
